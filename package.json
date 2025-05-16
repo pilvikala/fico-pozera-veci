@@ -4,12 +4,13 @@
   "description": "Blog o pozorovaní vecí",
   "scripts": {
     "build": "node build.js",
-    "dev": "npx http-server -p 3000 --cors -c-1"
+    "dev": "nodemon --watch . --watch posts --watch build.js --ext js,md,html,css --exec 'npm run build && npx http-server -p 3000 --cors -c-1'"
   },
   "dependencies": {
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "nodemon": "^3.0.3"
   }
 }
