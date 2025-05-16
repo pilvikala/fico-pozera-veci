@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fico sa pozerá na veci</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Fico sa pozerá na veci</h1>
+      <nav>
+        <ul>
+          <li><a href="#home">Domov</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="posts">
+        <!-- Posts will be loaded here dynamically -->
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Fico sa pozerá na veci. Všetky práva vyhradené.</p>
+    </footer>
+
+    <script>
+      // Function to format date
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("sk-SK", options);
+      }
+
+      // Function to create post HTML
+      function createPostHTML(post, isFeatured = false) {
+        return `
+                    <article class="featured-post">
+                        <div class="post-image">
+                            <img src="${post.photo}" alt="${post.title}">
+                        </div>
+                        <div class="post-content">
+                            <p class="post-date">${formatDate(post.date)}</p>
+                            ${
+                              post.description
+                                ? `<p>${post.description}</p>`
+                                : ""
+                            }
+                        </div>
+                    </article>
+                `;
+      }
+
+      // Load and display posts
+      fetch("posts.json")
+        .then((response) => response.json())
+        .then((posts) => {
+          const postsContainer = document.getElementById("posts");
+
+          // Display featured post (most recent)
+          if (posts.length > 0) {
+            postsContainer.innerHTML = `
+                        ${createPostHTML(posts[0], true)}
+                    `;
+          }
+
+          // Display remaining posts
+          if (posts.length > 1) {
+            const remainingPosts = posts.slice(1);
+            postsContainer.innerHTML += `
+                        <div class="post-grid">
+                            ${remainingPosts
+                              .map((post) => createPostHTML(post))
+                              .join("")}
+                        </div>
+                    `;
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading posts:", error);
+          document.getElementById("posts").innerHTML =
+            "<p>Nepodarilo sa načítať príspevky.</p>";
+        });
+    </script>
+  </body>
+</html>
